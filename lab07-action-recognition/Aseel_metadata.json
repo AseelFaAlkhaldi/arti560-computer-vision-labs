@@ -1,0 +1,16 @@
+{
+  "student": "Aseel",
+  "classes": [
+    "horse_riding",
+    "trampoline_jumping",
+    "tennis_swing"
+  ],
+  "label_map": {
+    "horse_riding": 0,
+    "trampoline_jumping": 1,
+    "tennis_swing": 2
+  },
+  "sequence_len": 8,
+  "img_size": 112,
+  "test_accuracy": 1.0
+}
