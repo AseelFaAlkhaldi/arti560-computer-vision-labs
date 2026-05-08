@@ -25,8 +25,8 @@ elif MODE == "MPI" :
     POSE_PAIRS = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13] ]
 
 
-inWidth = 368
-inHeight = 368
+inWidth = 192
+inHeight = 192
 threshold = 0.1
 
 
@@ -34,9 +34,20 @@ input_source = args.video_file
 cap = cv2.VideoCapture(input_source)
 hasFrame, frame = cap.read()
 
+if not hasFrame:
+    print("Could not read video.")
+    exit()
+
+frame = cv2.resize(frame, (640, 360))
+
 save_name = os.path.splitext(os.path.basename(input_source))[0]
 print(save_name)
-vid_writer = cv2.VideoWriter(f"{save_name}_openpose.avi",cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame.shape[1],frame.shape[0]))
+vid_writer = cv2.VideoWriter(
+    f"{save_name}_openpose.avi",
+    cv2.VideoWriter_fourcc('M','J','P','G'),
+    10,
+    (640, 360)
+)
 
 net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
 if args.device == "cpu":
@@ -50,10 +61,12 @@ elif args.device == "gpu":
 while cv2.waitKey(1) < 0:
     t = time.time()
     hasFrame, frame = cap.read()
-    frameCopy = np.copy(frame)
+
     if not hasFrame:
-        cv2.waitKey()
         break
+
+    frame = cv2.resize(frame, (640, 360))
+    frameCopy = np.copy(frame)
 
     frameWidth = frame.shape[1]
     frameHeight = frame.shape[0]
@@ -101,7 +114,7 @@ while cv2.waitKey(1) < 0:
     cv2.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
     # cv2.putText(frame, "OpenPose using OpenCV", (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 50, 0), 2, lineType=cv2.LINE_AA)
     # cv2.imshow('Output-Keypoints', frameCopy)
-    #cv2.imshow('Output-Skeleton', frame)
+    cv2.imshow('Output-Skeleton', frame)
 
     vid_writer.write(frame)
 

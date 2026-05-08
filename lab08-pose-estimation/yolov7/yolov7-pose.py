@@ -13,7 +13,7 @@ def pose_video(frame):
     mapped_img = frame.copy()
     # Letterbox resizing.
     img = letterbox(frame, input_size, stride=64, auto=True)[0]
-    print(img.shape)
+    # print(img.shape)
     img_ = img.copy()
     # Convert the array to 4D.
     img = transforms.ToTensor()(img)
@@ -70,9 +70,7 @@ _ = model.float().eval()
 model.to(device)
 
 # Provide the list of paths to your chosen videos her
-videos = [
-        'skydiving',
-        'far-away']
+videos = ["yoga"]
 
 file_name = videos[0] + '.mp4'
 vid_path = '../media/' + file_name
@@ -87,7 +85,13 @@ h, w, _ = frame.shape
 #                       cv2.VideoWriter_fourcc(*'mp4v'), 
 #                       fps, (w, h))
 
-out = cv2.VideoWriter(f"{save_name}_yolo7.avi",cv2.VideoWriter_fourcc('M','J','P','G'), 10, w,h)
+save_name = "yoga"
+out = cv2.VideoWriter(
+    f"{save_name}_yolov7.avi",
+    cv2.VideoWriter_fourcc('M','J','P','G'),
+    10,
+    (w, h)
+)
 
 #-------------------------------------------------------------------------------#
 
